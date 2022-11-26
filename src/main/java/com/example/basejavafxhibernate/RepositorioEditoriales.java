@@ -16,6 +16,14 @@ public class RepositorioEditoriales {
         s.close();
     }
 
+    public void modificar(Editorial editorial){
+        Session s=HibernateUtil.openSession();
+        Transaction t=s.beginTransaction();
+        s.update(editorial);
+        t.commit();
+        s.close();
+    }
+
     public ObservableList<Editorial> listarTodas(){
         Session s=HibernateUtil.openSession();
         Transaction t=s.beginTransaction();
