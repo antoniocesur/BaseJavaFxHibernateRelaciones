@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+
 @Entity
 @Table(name = "editoriales")
 @AllArgsConstructor
@@ -20,6 +22,9 @@ public class Editorial {
     String editorial;
     @Column(name="pais")
     String pais;
+
+    @OneToMany
+    ArrayList<Libro> libros;
 
     public Editorial() {
     }
