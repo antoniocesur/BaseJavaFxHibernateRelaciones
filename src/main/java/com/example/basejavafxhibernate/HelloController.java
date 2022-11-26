@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class HelloController implements Initializable {
     @FXML
     VBox vBox, vBoxLibros;
     TableView<Editorial> tblEditoriales;
+    TableView<Libro> tblLibros;
     RepositorioEditoriales repositorioEditoriales;
     RepositorioLibros repositorioLibros;
 
@@ -104,7 +106,7 @@ public class HelloController implements Initializable {
 
         //Empiezo la creación de la tabla de libros
         repositorioLibros=new RepositorioLibros();
-        TableView<Libro> tblLibros=new TableView<>(repositorioLibros.listarTodos());
+        tblLibros=new TableView<>(repositorioLibros.listarTodos());
         tblLibros.setPrefSize(300, 400);
         TableColumn<Libro, Integer> colIdLibro=new TableColumn<>("Id");
         TableColumn<Libro, Editorial> colEditorialLibro=new TableColumn<>("Editorial");
@@ -119,15 +121,60 @@ public class HelloController implements Initializable {
         tblLibros.getColumns().addAll(colIdLibro, colEditorialLibro, colTitulo, colAutor);
         vBoxLibros.getChildren().add(tblLibros);
 
+        HBox hBoxTextFieldsLibro=new HBox(20);
         Label lblIdLibro=new Label("");
         ComboBox<Editorial> comboEditorial=new ComboBox<>(repositorioEditoriales.listarTodas());
+        TextField txtTitulo=new TextField();
+        TextField txtAutor=new TextField();
+        hBoxTextFieldsLibro.getChildren().addAll(lblIdLibro, comboEditorial, txtTitulo, txtAutor);
+        vBoxLibros.getChildren().add(hBoxTextFieldsLibro);
 
+        HBox botoneraLibro=new HBox(20);
 
+        Button btnNuevoLibro=new Button("Nuevo");
+        btnNuevoLibro.setOnAction(e->{
+            comboEditorial.getSelectionModel().select(0);
+            lblIdLibro  .setText("0");
+            txtTitulo.setText("");
+            txtAutor.setText("");
+        });
 
+        Button btnInsertarLibro=new Button("Insertar");
+        btnInsertarLibro.setOnAction(e->{
+            repositorioLibros.insertar(new Libro(comboEditorial.getSelectionModel().getSelectedItem(), txtTitulo.getText(), txtAutor.getText()));
+            actualizarTablaLibros();
+        });
+
+        Button btnModificarLibro=new Button("Modificar");
+        btnModificarLibro.setOnAction(e->{
+            repositorioLibros.modificar(new Libro(Integer.parseInt(lblIdLibro.getText()), comboEditorial.getSelectionModel().getSelectedItem(), txtTitulo.getText(), txtAutor.getText()));
+            actualizarTablaLibros();
+        });
+
+        Button btnBorrarLibro=new Button("Borrar");
+        btnBorrarLibro.setOnAction(e->{
+            //Para borrar solo necesito el id
+            repositorioLibros.borrar(new Libro(Integer.parseInt(lblIdLibro.getText()), null, "", ""));
+            actualizarTablaLibros();
+        });
+        botoneraLibro.getChildren().addAll(btnNuevoLibro, btnInsertarLibro, btnModificarLibro, btnBorrarLibro);
+        vBoxLibros.getChildren().add(botoneraLibro);
+
+        tblLibros.setOnMouseClicked(e -> {
+            Libro libro =tblLibros.getSelectionModel().getSelectedItem();
+            lblIdLibro.setText(String.valueOf(libro.getId()));
+            comboEditorial.getSelectionModel().select(libro.getEditorial());
+            txtTitulo.setText(libro.getTitulo());
+            txtAutor.setText(libro.getAutor());
+        });
     }
-
     public void actualizarTablaEditoriales(){
         ObservableList<Editorial> lista=repositorioEditoriales.listarTodas();
         tblEditoriales.setItems(lista);
+    }
+
+    public void actualizarTablaLibros(){
+        ObservableList<Libro> lista=repositorioLibros.listarTodos();
+        tblLibros.setItems(lista);
     }
 }
