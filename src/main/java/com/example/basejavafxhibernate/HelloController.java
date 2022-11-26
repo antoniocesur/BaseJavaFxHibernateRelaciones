@@ -43,13 +43,16 @@ public class HelloController implements Initializable {
         tblEditoriales.getColumns().addAll(colId, colEditorial, colPais);
         vBox.getChildren().add(tblEditoriales);
 
-        Label lblId=new Label();
+        HBox hBoxTextFields=new HBox(20);
+        Label lblId=new Label("0");
         TextField txtEditorial=new TextField();
+        txtEditorial.setPrefWidth(200);
         txtEditorial.setPromptText("Escribe el nombre de la editorial");
 
         String[] listaPaises={"España", "Alemania", "Italia", "Francia", "China"};
         ComboBox<String> comboPaises=new ComboBox<>(FXCollections.observableList(Arrays.asList(listaPaises)));
-        vBox.getChildren().addAll(lblId, txtEditorial, comboPaises);
+        hBoxTextFields.getChildren().addAll(lblId, txtEditorial, comboPaises);
+        vBox.getChildren().add(hBoxTextFields);
 
         tblEditoriales.setOnMouseClicked(e -> {
             Editorial editorial =tblEditoriales.getSelectionModel().getSelectedItem();
