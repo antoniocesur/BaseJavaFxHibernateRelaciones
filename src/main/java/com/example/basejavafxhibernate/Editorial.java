@@ -7,10 +7,11 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "editoriales")
-@AllArgsConstructor
 @Getter
 @Setter
 public class Editorial {
@@ -23,8 +24,8 @@ public class Editorial {
     @Column(name="pais")
     String pais;
 
-    @OneToMany
-    ArrayList<Libro> libros;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "editorial")
+    private List<Libro> libros;
 
     public Editorial() {
     }
@@ -35,6 +36,11 @@ public class Editorial {
         this.pais = pais;
     }
 
+    public Editorial(int id, String editorial, String pais) {
+        this.id=id;
+        this.editorial = editorial;
+        this.pais = pais;
+    }
     public String toString(){
         return editorial + " (" + pais + ")";
     }

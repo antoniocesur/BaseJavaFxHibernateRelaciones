@@ -7,7 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
-
+@Entity
+@Table(name = "libros")
 @AllArgsConstructor
 @Setter
 @Getter
@@ -18,7 +19,8 @@ public class Libro {
     int id;
 
     @ManyToOne
-    Editorial editorial;
+    @JoinColumn(name = "FK_editorial", nullable = false, updatable = false)
+    private Editorial editorial;
 
     String titulo;
     String autor;
@@ -26,5 +28,9 @@ public class Libro {
 
     public Libro(){
 
+    }
+
+    public String toString(){
+        return titulo + " (" + autor + ")";
     }
 }

@@ -17,9 +17,10 @@ import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
     @FXML
-    VBox vBox;
+    VBox vBox, vBoxLibros;
     TableView<Editorial> tblEditoriales;
     RepositorioEditoriales repositorioEditoriales;
+    RepositorioLibros repositorioLibros;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,7 +59,7 @@ public class HelloController implements Initializable {
 
         tblEditoriales.setOnMouseClicked(e -> {
             Editorial editorial =tblEditoriales.getSelectionModel().getSelectedItem();
-            //lblId.setText(String.valueOf(editorial.getId()));
+            lblId.setText(String.valueOf(editorial.getId()));
             txtEditorial.setText(editorial.getEditorial());
             comboPaises.getSelectionModel().select(editorial.getPais());
         });
@@ -99,6 +100,29 @@ public class HelloController implements Initializable {
 
         vBox.getChildren().add(botonera);
         vBox.setAlignment(Pos.CENTER_LEFT);
+        actualizarTablaEditoriales();
+
+        //Empiezo la creación de la tabla de libros
+        repositorioLibros=new RepositorioLibros();
+        TableView<Libro> tblLibros=new TableView<>(repositorioLibros.listarTodos());
+        tblLibros.setPrefSize(300, 400);
+        TableColumn<Libro, Integer> colIdLibro=new TableColumn<>("Id");
+        TableColumn<Libro, Editorial> colEditorialLibro=new TableColumn<>("Editorial");
+        TableColumn<Libro, String> colTitulo=new TableColumn<>("Titulo");
+        TableColumn<Libro, String> colAutor=new TableColumn<>("Autor");
+
+        colIdLibro.setCellValueFactory(new PropertyValueFactory<Libro, Integer>("id"));
+        colEditorialLibro.setCellValueFactory(new PropertyValueFactory<Libro, Editorial>("editorial"));
+        colTitulo.setCellValueFactory(new PropertyValueFactory<Libro, String>("titulo"));
+        colAutor.setCellValueFactory(new PropertyValueFactory<Libro, String>("autor"));
+
+        tblLibros.getColumns().addAll(colIdLibro, colEditorialLibro, colTitulo, colAutor);
+        vBoxLibros.getChildren().add(tblLibros);
+
+        Label lblIdLibro=new Label("");
+        ComboBox<Editorial> comboEditorial=new ComboBox<>(repositorioEditoriales.listarTodas());
+
+
 
     }
 

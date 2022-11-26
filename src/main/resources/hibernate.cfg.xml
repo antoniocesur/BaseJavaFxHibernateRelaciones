@@ -15,6 +15,7 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="com.example.basejavafxhibernate.Editorial" />
+        <mapping class="com.example.basejavafxhibernate.Libro" />
         <!--<mapping resource="Editorial.hbm.xml" />-->
 
     </session-factory>
