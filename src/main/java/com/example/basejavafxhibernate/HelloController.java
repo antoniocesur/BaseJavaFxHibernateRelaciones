@@ -27,8 +27,10 @@ public class HelloController implements Initializable {
         HibernateUtil.inicia();
 
         repositorioEditoriales=new RepositorioEditoriales();
-        //repositorioEditoriales.insertar(new Editorial("Bruguera", "España"));
         ObservableList<Editorial> lista=repositorioEditoriales.listarTodas();
+        if(lista.size()<1) {
+            repositorioEditoriales.insertar(new Editorial("Bruguera", "España"));
+        }
 
         tblEditoriales=new TableView<Editorial>(lista);
         tblEditoriales.setPrefSize(300, 400);
@@ -56,12 +58,22 @@ public class HelloController implements Initializable {
 
         tblEditoriales.setOnMouseClicked(e -> {
             Editorial editorial =tblEditoriales.getSelectionModel().getSelectedItem();
-            lblId.setText(String.valueOf(editorial.getId()));
+            //lblId.setText(String.valueOf(editorial.getId()));
             txtEditorial.setText(editorial.getEditorial());
             comboPaises.getSelectionModel().select(editorial.getPais());
         });
 
         HBox botonera=new HBox(20);
+
+        Button btnNuevo=new Button("Nuevo");
+        btnNuevo.setOnAction(e->{
+            System.out.println(((Control)e.getSource()).getId() );
+            comboPaises.getSelectionModel().select(0);
+            lblId.setText("0");
+            txtEditorial.setText("");
+
+        });
+        botonera.getChildren().add(btnNuevo);
 
         Button btnInsertar=new Button("Insertar");
         btnInsertar.setOnAction(e->{
@@ -76,6 +88,14 @@ public class HelloController implements Initializable {
             actualizarTablaEditoriales();
         });
         botonera.getChildren().add(btnModificar);
+
+        Button btnBorrar=new Button("Borrar");
+        btnBorrar.setOnAction(e->{
+            //Para borrar solo necesito el id
+            repositorioEditoriales.borrar(new Editorial(Integer.parseInt(lblId.getText()), "", ""));
+            actualizarTablaEditoriales();
+        });
+        botonera.getChildren().add(btnBorrar);
 
         vBox.getChildren().add(botonera);
         vBox.setAlignment(Pos.CENTER_LEFT);

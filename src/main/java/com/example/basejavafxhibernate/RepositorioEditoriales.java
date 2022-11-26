@@ -24,6 +24,13 @@ public class RepositorioEditoriales {
         s.close();
     }
 
+    public void borrar(Editorial editorial){
+        Session s=HibernateUtil.openSession();
+        Transaction t=s.beginTransaction();
+        s.delete(editorial);
+        t.commit();
+        s.close();
+    }
     public ObservableList<Editorial> listarTodas(){
         Session s=HibernateUtil.openSession();
         Transaction t=s.beginTransaction();
